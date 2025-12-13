@@ -1,0 +1,10 @@
+{
+  "xor": {
+    "path": "bench/xor",
+    "series": "XOR",
+    "description": "Minimal end-to-end sanity test for pipelines."
+  },
+  "N1": { "path": "bench/N/n1", "series": "N", "description": "Small neuron count benchmark." },
+  "N2": { "path": "bench/N/n2", "series": "N", "description": "Medium neuron scaling." },
+  "N3": { "path": "bench/N/n3", "series": "N", "description": "Max neuron scaling test." }
+}
