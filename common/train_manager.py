@@ -7,6 +7,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+try:
+    # Optional: only used to reset hidden states safely between batches.
+    from snntorch import utils as snn_utils  # type: ignore
+except Exception:  # pragma: no cover
+    snn_utils = None
+
 
 @dataclass
 class TrainingConfig:
@@ -28,12 +34,14 @@ class TrainingConfig:
 
 
 class Trainer:
-    """Minimal, reliable trainer for rate-coded SNN outputs.
+    """Reliable trainer for rate-coded SNN outputs.
 
     Assumption:
       model(x) -> spikes with shape (T, B, C) where C = num_classes.
-    We convert to rate/logit via mean over time and apply CrossEntropyLoss once.
-    This avoids multiple backward() calls on the same graph.
+
+    We convert to logits via mean over time and apply CrossEntropyLoss once.
+    Additionally, we reset any snnTorch internal neuron states between batches
+    to avoid accidental graph reuse across batches.
     """
 
     def __init__(self, model: torch.nn.Module, cfg: TrainingConfig, device: Optional[torch.device] = None):
@@ -67,6 +75,12 @@ class Trainer:
             return Xb.permute(1, 0, 2).contiguous().to(self.device)
         raise ValueError("X must be (N,F) or (N,T,F).")
 
+    def _reset_snn_state(self) -> None:
+        """Reset snnTorch hidden states if available."""
+        if snn_utils is not None:
+            # This clears internal membrane/spike state buffers.
+            snn_utils.reset(self.model)
+
     def train(self, X_train: torch.Tensor, y_train: torch.Tensor) -> None:
         self.model.train()
 
@@ -81,22 +95,23 @@ class Trainer:
             correct = 0
             total = 0
 
-            # Shuffle each epoch
             idx = torch.randperm(X_train.shape[0])
             Xs = X_train[idx]
             ys = y_train[idx]
 
             for Xb, yb in self._to_batches(Xs, ys):
+                self._reset_snn_state()
+
                 Xb_in = self._prepare_input(Xb)
                 yb = yb.to(self.device)
 
                 self.optimizer.zero_grad(set_to_none=True)
 
-                spk = self.model(Xb_in)           # (T,B,C)
+                spk = self.model(Xb_in)  # (T,B,C)
                 if spk.dim() != 3:
                     raise RuntimeError(f"Model output must be (T,B,C), got {tuple(spk.shape)}")
 
-                logits = spk.mean(dim=0)          # (B,C) rate-coded logits
+                logits = spk.mean(dim=0)  # (B,C)
                 loss = self.criterion(logits, yb)
 
                 loss.backward()
@@ -135,6 +150,8 @@ class Trainer:
         total = 0
 
         for Xb, yb in self._to_batches(X_test, y_test):
+            self._reset_snn_state()
+
             Xb_in = self._prepare_input(Xb)
             yb = yb.to(self.device)
 
