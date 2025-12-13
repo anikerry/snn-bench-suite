@@ -1,10 +1,117 @@
 {
   "xor": {
-    "path": "bench/xor",
     "series": "XOR",
-    "description": "Minimal end-to-end sanity test for pipelines."
+    "path": "bench.xor",
+    "model_class": "XORNet"
   },
-  "N1": { "path": "bench/N/n1", "series": "N", "description": "Small neuron count benchmark." },
-  "N2": { "path": "bench/N/n2", "series": "N", "description": "Medium neuron scaling." },
-  "N3": { "path": "bench/N/n3", "series": "N", "description": "Max neuron scaling test." }
+  "N1": {
+    "series": "N",
+    "path": "bench.N.n1",
+    "model_class": "N1Net"
+  },
+  "N2": {
+    "series": "N",
+    "path": "bench.N.n2",
+    "model_class": "N2Net"
+  },
+  "N3": {
+    "series": "N",
+    "path": "bench.N.n3",
+    "model_class": "N3Net"
+  },
+  "N4": {
+    "series": "N",
+    "path": "bench.N.n4",
+    "model_class": "N4Net"
+  },
+  "S1": {
+    "series": "S",
+    "path": "bench.S.s1",
+    "model_class": "S1Net"
+  },
+  "S2": {
+    "series": "S",
+    "path": "bench.S.s2",
+    "model_class": "S2Net"
+  },
+  "S3": {
+    "series": "S",
+    "path": "bench.S.s3",
+    "model_class": "S3Net"
+  },
+  "S4": {
+    "series": "S",
+    "path": "bench.S.s4",
+    "model_class": "S4Net"
+  },
+  "P1": {
+    "series": "P",
+    "path": "bench.P.p1",
+    "model_class": "P1Net"
+  },
+  "P2": {
+    "series": "P",
+    "path": "bench.P.p2",
+    "model_class": "P2Net"
+  },
+  "P3": {
+    "series": "P",
+    "path": "bench.P.p3",
+    "model_class": "P3Net"
+  },
+  "P4": {
+    "series": "P",
+    "path": "bench.P.p4",
+    "model_class": "P4Net"
+  },
+  "L1": {
+    "series": "L",
+    "path": "bench.L.l1",
+    "model_class": "L1Net"
+  },
+  "L2": {
+    "series": "L",
+    "path": "bench.L.l2",
+    "model_class": "L2Net"
+  },
+  "L3": {
+    "series": "L",
+    "path": "bench.L.l3",
+    "model_class": "L3Net"
+  },
+  "L4": {
+    "series": "L",
+    "path": "bench.L.l4",
+    "model_class": "L4Net"
+  },
+  "E1": {
+    "series": "E",
+    "path": "bench.E.e1",
+    "model_class": "E1Net"
+  },
+  "E2": {
+    "series": "E",
+    "path": "bench.E.e2",
+    "model_class": "E2Net"
+  },
+  "E3": {
+    "series": "E",
+    "path": "bench.E.e3",
+    "model_class": "E3Net"
+  },
+  "A1": {
+    "series": "A",
+    "path": "bench.A.a1",
+    "model_class": "A1Net"
+  },
+  "A2": {
+    "series": "A",
+    "path": "bench.A.a2",
+    "model_class": "A2Net"
+  },
+  "A3": {
+    "series": "A",
+    "path": "bench.A.a3",
+    "model_class": "A3Net"
+  }
 }
